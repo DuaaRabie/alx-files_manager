@@ -5,15 +5,14 @@ module.exports = {
       jest: true,
     },
     extends: [
-      'airbnb-base',
-      'plugin:jest/all',
+      'eslint:recommended'
     ],
     globals: {
       Atomics: 'readonly',
       SharedArrayBuffer: 'readonly',
     },
     parserOptions: {
-      ecmaVersion: 2018,
+      ecmaVersion: 2020,
       sourceType: 'module',
     },
     plugins: ['jest'],
