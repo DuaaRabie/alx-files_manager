@@ -1,11 +1,8 @@
-import { createClient } from '@redis/client';
+import redis from 'redis;
 
 class RedisClient {
   constructor() {
-    this.client = createClient({
-      host: 'localhost',
-      port: 6379,
-    })
+    this.client = redis.createClient()
 
     this.client.on('error', (err) => {
       console.error('Redis client error:', err);
