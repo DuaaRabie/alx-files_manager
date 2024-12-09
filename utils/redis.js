@@ -2,7 +2,10 @@ import { createClient } from '@redis/client';
 
 class RedisClient {
   constructor() {
-    this.client = createClient()
+    this.client = createClient({
+      host: 'localhost',
+      port: 6379,
+    })
 
     this.client.on('error', (err) => {
       console.error('Redis client error:', err);
