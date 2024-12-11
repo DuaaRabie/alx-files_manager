@@ -15,8 +15,14 @@ class RedisClient {
     });
   }
 
-  isAlive() {
-    return this.client.status === 'ready';  
+  async isAlive() {
+    try {
+      await this.client.ping();
+      return true;
+    } catch (error) {
+      console.error('Error checking Redis connection:', error);
+      return false;
+    }
   }
 
   // Using the promisified methods
