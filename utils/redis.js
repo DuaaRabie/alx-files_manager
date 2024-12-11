@@ -21,8 +21,11 @@ class RedisClient {
   // Method to check if Redis is alive
   async isAlive() {
     try {
-      await this.client.ping();
-      return true;
+      const res = await this.client.ping();
+      if (res === 'PONG') {
+       return true;
+      }
+      return false;
     } catch (error) {
       console.error('Error checking Redis connection:', error);
       return false;
