@@ -16,10 +16,7 @@ class DBClient {
 
   // Function to check if the MongoDB connection is alive
   isAlive() {
-    if (this.client.isConnected()) {
-      return true
-    }
-    return false;
+    return this.client.isConnected();
   }
 
   // Function to count the number of users in the 'users' collection
