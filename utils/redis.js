@@ -4,7 +4,7 @@ import { promisify } from 'util';
 class RedisClient {
   constructor() {
     // Create a Redis client instance
-    this.client = new redis.createClient();
+    this.client = redis.createClient();
 
     // Error handling: log Redis client errors
     this.client.on('error', (err) => {
@@ -24,6 +24,7 @@ class RedisClient {
       if (this.client.ping() === 'PONG') {
         return true;
       }
+      return false;
     } catch (error) {
       console.error('Error checking Redis connection:', error);
       return false;
