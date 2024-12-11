@@ -8,23 +8,18 @@ class DBClient {
     const database = process.env.DB_DATABASE || 'files_manager';
 
     // Construct the connection string
-    const url = `mongodb://${host}:${port}`;
+    const url = `mongodb://${host}:${port}${database}`;
     this.client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
     this.database = database;
-    this.client.connect()
-      .catch((err) => console.error('MongoDB connection error:', err));
-    const db = this.client.db(this.database)
+    this.client.connect();
   }
 
   // Function to check if the MongoDB connection is alive
-  async isAlive() {
-    try {
-      await this.client.db(this.database).command({ ping: 1 });
-      return true; // If no error occurs, the connection is alive
-    } catch (error) {
-      console.error('Error checking MongoDB connection:', error);
-      return false; // Return false if the connection fails
+  isAlive() {
+    if (this.client.isConnected()) {
+      return true
     }
+    return false;
   }
 
   // Function to count the number of users in the 'users' collection
