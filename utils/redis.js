@@ -1,10 +1,10 @@
-import redis from 'redis';
+import Redis from 'ioredis';
 import { promisify } from 'util';
 
 class RedisClient {
   constructor() {
     // Create a Redis client instance
-    this.client = redis.createClient();
+    this.client = new Redis();
 
     // Error handling: log Redis client errors
     this.client.on('error', (err) => {
