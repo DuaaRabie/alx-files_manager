@@ -13,6 +13,7 @@ class DBClient {
     this.database = database;
     this.client.connect()
       .catch((err) => console.error('MongoDB connection error:', err));
+    const db = this.client.db(this.database)
   }
 
   // Function to check if the MongoDB connection is alive
