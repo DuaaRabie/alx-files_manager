@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const UsersController = require('../controllers/UsersController');
 
-router.get('/status', require('../controllers/AppController').getStatus);
-router.get('/stats', require('../controllers/AppController').getStats);
+// POST /users - Create a new user
+router.post('/users', UsersController.postNew);
 
 module.exports = router;
