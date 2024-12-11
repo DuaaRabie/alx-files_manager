@@ -20,7 +20,7 @@ class RedisClient {
 
   // Method to check if Redis is alive
   isAlive() {
-    return this.client.status === 'ready';
+    return this.client.connected && this.client.ready;
   }
 
   // Promisified method to get a value from Redis by key
