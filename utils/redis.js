@@ -15,22 +15,8 @@ class RedisClient {
     });
   }
 
-  async isAlive() {
-    try {
-      const res = await new Promise((resolve, reject) => {
-        this.client.ping((err, res) => {
-          if (err) {
-            reject(new Error(`Error checking Redis connection: ${err.message}`));
-          } else {
-            resolve(res === 'PONG');
-          }
-        });
-      });
-      return res;
-    } catch (error) {
-      console.error('Error checking Redis connection:', error);
-      return false;
-    }
+  isAlive() {
+    return this.client.status === 'ready';  
   }
 
   // Using the promisified methods
