@@ -1,11 +1,11 @@
 import redis from 'redis';
-import { promisify } from 'util';
-
+import { promisify } from 'util'; // Import promisify from 'util'
 
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
 
+    // Promisify Redis methods that use callbacks
     this.getAsync = promisify(this.client.get).bind(this.client);
     this.setAsync = promisify(this.client.set).bind(this.client);
     this.delAsync = promisify(this.client.del).bind(this.client);
@@ -15,18 +15,25 @@ class RedisClient {
     });
   }
 
-  isAlive() {
-      return new Promise((resolve, reject) => {
-        this.client.ping((error, res) => {
-          if (error) {
-            console.error('Error checking Redis connection:', error);
-            return reject(false);
+  async isAlive() {
+    try {
+      const res = await new Promise((resolve, reject) => {
+        this.client.ping((err, res) => {
+          if (err) {
+            reject(new Error(`Error checking Redis connection: ${err.message}`));
+          } else {
+            resolve(res === 'PONG');
           }
-          resolve(res === 'PONG');
+        });
       });
-    });
+      return res;
+    } catch (error) {
+      console.error('Error checking Redis connection:', error);
+      return false;
+    }
   }
 
+  // Using the promisified methods
   async get(key) {
     try {
       const value = await this.getAsync(key);
