@@ -1,10 +1,10 @@
-import Redis from 'ioredis';
+import redis from 'redis';
 import { promisify } from 'util';
 
 class RedisClient {
   constructor() {
     // Create a Redis client instance
-    this.client = new Redis();
+    this.client = redis.createClient();
 
     // Error handling: log Redis client errors
     this.client.on('error', (err) => {
@@ -20,7 +20,12 @@ class RedisClient {
 
   // Method to check if Redis is alive
   isAlive() {
-    return this.client.status === 'ready';
+    this.client.on('connect', () => {
+      return true;
+    });
+    this.client.on('error', (err) => {
+      return false;
+    });
   }
 
   // Promisified method to get a value from Redis by key
@@ -57,4 +62,4 @@ class RedisClient {
 
 // Create an instance of RedisClient and export it
 const redisClient = new RedisClient();
-module.export = redisClient;
+export default redisClient;
