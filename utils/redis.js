@@ -19,17 +19,8 @@ class RedisClient {
   }
 
   // Method to check if Redis is alive
-  async isAlive() {
-    try {
-      const res = await this.client.ping();
-      if (res === 'PONG') {
-       return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error checking Redis connection:', error);
-      return false;
-    }
+  isAlive() {
+    return this.client.status === 'ready';
   }
 
   // Promisified method to get a value from Redis by key
