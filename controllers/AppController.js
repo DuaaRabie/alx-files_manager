@@ -1,5 +1,5 @@
-import redisClient from '../utils/redis.js'; // Import Redis client
-import dbClient from '../utils/db.js'; // Import MongoDB client
+import redisClient from '../utils/redis'; // Import Redis client
+import dbClient from '../utils/db'; // Import MongoDB client
 
 class AppController {
   // GET /status: Check if Redis and DB are alive
@@ -12,7 +12,7 @@ class AppController {
       // Send the status response
       res.status(200).json({
         redis: redisStatus,
-        db: dbStatus
+        db: dbStatus,
       });
     } catch (error) {
       console.error('Error in getStatus:', error);
@@ -30,7 +30,7 @@ class AppController {
       // Send the stats response
       res.status(200).json({
         users: usersCount,
-        files: filesCount
+        files: filesCount,
       });
     } catch (error) {
       console.error('Error in getStats:', error);
