@@ -1,50 +1,37 @@
-const crypto = require('crypto');
-const dbClient = require('../utils/db'); // Assuming you have a dbClient instance to interact with MongoDB
+import sha1 from 'sha1';
+import Queue from 'bull/lib/queue';
+import dbClient from '../utils/db';
 
-class UsersController {
+const userQueue = new Queue('email sending');
+
+export default class UsersController {
   static async postNew(req, res) {
     const { email, password } = req.body;
-
-    // Check if email is provided
     if (!email) {
-      return res.status(400).json({ error: 'Missing email' });
+      res.status(400).json({ error: 'Missing email' });
+      return;
     }
-
-    // Check if password is provided
     if (!password) {
-      return res.status(400).json({ error: 'Missing password' });
+      res.status(400).json({ error: 'Missing password' });
+      return;
     }
+    const user = await (await dbClient.usersCollection()).findOne({ email });
 
-    try {
-      // Check if the email already exists
-      const existingUser = await dbClient.db.collection('users').findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({ error: 'Already exist' });
-      }
-
-      // Hash the password using SHA1
-      const hashedPassword = crypto.createHash('sha1').update(password).digest('hex');
-
-      // Create a new user
-      const newUser = {
-        email,
-        password: hashedPassword,
-      };
-
-      // Save the new user in the database
-      const result = await dbClient.db.collection('users').insertOne(newUser);
-
-      // Return the new user with the id and email
-      res.status(201).json({
-        id: result.insertedId,
-        email: newUser.email,
-      });
-
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    if (user) {
+      res.status(400).json({ error: 'Already exist' });
+      return;
     }
+    const insertionInfo = await (await dbClient.usersCollection())
+      .insertOne({ email, password: sha1(password) });
+    const userId = insertionInfo.insertedId.toString();
+
+    userQueue.add({ userId });
+    res.status(201).json({ email, id: userId });
+  }
+
+  static async getMe(req, res) {
+    const { user } = req;
+
+    res.status(200).json({ email: user.email, id: user._id.toString() });
   }
 }
-
-module.exports = UsersController;
