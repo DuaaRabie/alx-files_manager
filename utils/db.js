@@ -22,7 +22,7 @@ class DBClient {
   // Function to count the number of users in the 'users' collection
   async nbUsers() {
    try {
-      const usersCollection = this.client.db().collection('users');
+      const usersCollection = this.client.db(this.database).collection('users');
       const count = await usersCollection.countDocuments();
       return count;
     } catch (error) {
@@ -34,7 +34,7 @@ class DBClient {
   // Function to count the number of files in the 'files' collection
   async nbFiles() {
     try {
-      const filesCollection = this.client.db().collection('files');
+      const filesCollection = this.client.db(this.database).collection('files');
       const count = await filesCollection.countDocuments();
       return count;
     } catch (error) {
