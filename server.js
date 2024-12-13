@@ -1,5 +1,5 @@
 import express from 'express';
-import routes from './routes/index.js'; 
+import routes from './routes/index';
 // import startServer from './libs/boot';
 // import injectRoutes from './routes';
 // import injectMiddlewares from './libs/middlewares';
