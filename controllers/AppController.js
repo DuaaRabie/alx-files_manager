@@ -1,6 +1,7 @@
 import redisClient from '../utils/redis'; // Import Redis client
 import dbClient from '../utils/db'; // Import MongoDB client
 
+
 class AppController {
   // GET /status: Check if Redis and DB are alive
   static async getStatus(req, res) {
@@ -26,7 +27,6 @@ class AppController {
       // Get the number of users and files from the database
       const usersCount = await dbClient.nbUsers();
       const filesCount = await dbClient.nbFiles();
-
       // Send the stats response
       res.status(200).json({
         users: usersCount,
