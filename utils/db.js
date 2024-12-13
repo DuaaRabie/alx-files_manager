@@ -21,7 +21,7 @@ class DBClient {
 
   // Function to count the number of users in the 'users' collection
   async nbUsers() {
-   try {
+    try {
       const usersCollection = this.client.db(this.database).collection('users');
       const count = await usersCollection.countDocuments();
       return count;
