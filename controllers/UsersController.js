@@ -1,5 +1,8 @@
 import crypto from 'crypto'; // To hash the password
 import dbClient from '../utils/db'; // Assuming dbClient is set up properly for MongoDB
+import redisClient from '../utils/redis';
+import { ObjectId } from 'mongodb';
+
 
 class UsersController {
   // POST /users to create a new user
@@ -42,6 +45,27 @@ class UsersController {
       console.error('Error creating user:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
+  }
+
+  // GET /users/me - Get current user based on token
+  static async getMe(req, res) {
+    const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Retrieve the user ID from Redis
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    // Fetch user data from DB
+    const user = await dbClient.client.db(dbClient.database).collection('users').findOne({ _id: ObjectId(userId) });
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    // Return user info (only email and id)
+    return res.status(200).json({ id: user._id, email: user.email });
   }
 }
 
