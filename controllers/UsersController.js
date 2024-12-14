@@ -1,8 +1,7 @@
 import crypto from 'crypto'; // To hash the password
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db'; // Assuming dbClient is set up properly for MongoDB
 import redisClient from '../utils/redis';
-import { ObjectId } from 'mongodb';
-
 
 class UsersController {
   // POST /users to create a new user
